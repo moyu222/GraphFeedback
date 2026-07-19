@@ -1,0 +1,4 @@
+comparison,left_method,right_method,paired_nodes,left_only_success,right_only_success,exact_mcnemar_p
+graph_prompt_vs_non_graph,graph_prompt_attack,non_graph_attack,30,4,3,1.0
+graph_feedback_vs_feedback_non_graph,graph_feedback,feedback_non_graph,30,5,5,1.0
+graph_feedback_vs_graph_prompt,graph_feedback,graph_prompt_attack,30,2,0,0.5

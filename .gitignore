@@ -1,0 +1,25 @@
+# Python and local environments
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+.conda/
+
+# Generated experiment records may contain source or generated text
+experiments/outputs/
+
+# Downloaded dependencies, datasets, and model weights
+external/
+models_cache/
+.cache/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+
+# Local and editor files
+.DS_Store
+Thumbs.db
+~$*
+*.tmp

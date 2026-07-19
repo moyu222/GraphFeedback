@@ -1,0 +1,29 @@
+[
+  {
+    "comparison": "graph_prompt_vs_non_graph",
+    "left_method": "graph_prompt_attack",
+    "right_method": "non_graph_attack",
+    "paired_nodes": 30,
+    "left_only_success": 4,
+    "right_only_success": 3,
+    "exact_mcnemar_p": 1.0
+  },
+  {
+    "comparison": "graph_feedback_vs_feedback_non_graph",
+    "left_method": "graph_feedback",
+    "right_method": "feedback_non_graph",
+    "paired_nodes": 30,
+    "left_only_success": 5,
+    "right_only_success": 5,
+    "exact_mcnemar_p": 1.0
+  },
+  {
+    "comparison": "graph_feedback_vs_graph_prompt",
+    "left_method": "graph_feedback",
+    "right_method": "graph_prompt_attack",
+    "paired_nodes": 30,
+    "left_only_success": 2,
+    "right_only_success": 0,
+    "exact_mcnemar_p": 0.5
+  }
+]

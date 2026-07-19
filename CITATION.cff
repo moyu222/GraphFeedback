@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this research artifact, please cite it using the metadata below."
+title: "GraphFeedback: Score-Guided Textual Adversarial Robustness Evaluation of GraphCLIP"
+type: software
+authors:
+  - name: "ZhangYangzonghan"
+repository-code: "https://github.com/moyu222/GraphFeedback"
+url: "https://github.com/moyu222/GraphFeedback"
+version: 1.0.0
+date-released: 2026-07-19
+keywords:
+  - graph foundation models
+  - text-attributed graphs
+  - adversarial robustness
+  - black-box evaluation
+  - GraphCLIP

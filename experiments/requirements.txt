@@ -1,0 +1,16 @@
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.4.1+cu121
+torch-geometric==2.6.1
+transformers==4.46.3
+sentence-transformers==3.2.1
+accelerate==1.1.1
+numpy==1.26.4
+scipy==1.14.1
+pandas==2.2.3
+scikit-learn==1.5.2
+PyYAML==6.0.2
+tqdm==4.67.1
+gdown==5.2.0
+psutil==6.1.0
+nvidia-ml-py==12.560.30
+hf_xet==1.5.2
