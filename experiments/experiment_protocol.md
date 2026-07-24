@@ -91,3 +91,55 @@ The main comparisons are `graph_feedback` versus `graph_prompt_attack`, and `gra
 - Broad superiority across datasets, victims, or generators.
 - Guaranteed semantic preservation from an embedding threshold.
 - First graph-aware LLM attack or first text-attributed graph attack.
+
+## Confirmatory extension: `random60v1`
+
+### Purpose and status
+
+This extension is frozen before viewing any confirmatory outcomes. It tests whether the score-feedback signal observed on the lower-margin `stress30v1` sample remains visible on a more representative class-balanced random sample. The stress and confirmatory samples must be reported separately.
+
+### Sample
+
+- Dataset and victim: unchanged CiteSeer data and released GraphCLIP checkpoint.
+- Eligibility: test nodes classified correctly by clean GraphCLIP inference.
+- Selection: stratified random sampling with seed `240726`.
+- Size: 60 nodes, exactly 10 from each of the six CiteSeer classes.
+- Independence: all 30 `stress30v1` node IDs are excluded before sampling.
+- The selected IDs and class counts are written to `run_manifest.json` before candidate generation.
+
+### Methods
+
+The confirmatory run includes the five comparisons required for the research questions:
+
+1. `random_edit`
+2. `non_graph_attack`
+3. `graph_prompt_attack`
+4. `feedback_non_graph`
+5. `graph_feedback`
+
+Generic paraphrasing is retained in the stress analysis but omitted here to control runtime because it is not required for either primary paired comparison.
+
+All model, generation, filtering, edit, semantic, and query settings remain identical to `stress30v1`. No threshold or prompt may be tuned after the selected nodes or aggregate results are viewed.
+
+### Endpoints
+
+- Primary comparison: paired ASR of `graph_feedback` versus `graph_prompt_attack`.
+- Secondary comparison: paired ASR of `graph_feedback` versus `feedback_non_graph`.
+- Supporting outcomes: first-round versus refinement-only successes, clean-class margin reduction, actual victim queries, no-valid-candidate rate, semantic similarity, changed-token ratio, generation time, and per-class counts.
+- Exact paired tests and bootstrap confidence intervals remain descriptive; lack of statistical significance must be reported.
+
+### Interpretation rules
+
+- If feedback improves the random sample, report the stress result as mechanism-oriented evidence and the random result as confirmatory pilot evidence.
+- If feedback does not improve the random sample, conclude that the observed benefit is concentrated in the lower-margin stress setting.
+- If all methods have few or no successes, report the random-sample robustness result rather than weakening the constraints or resampling.
+- Do not combine the 30 stress nodes and 60 random nodes into a single ASR.
+
+### Execution and stopping rules
+
+- Entry point: `experiments/run_random60.sh`.
+- Run ID: `random60v1`.
+- Output: `experiments/outputs/random60v1/citeseer/`.
+- The run remains resumable; rerunning the same entry point skips completed node-method records.
+- Stop for diagnosis if parsing rate or valid-record rate falls below 50%.
+- Code defects may be fixed and documented, but result-driven changes require a new run ID and protocol revision.

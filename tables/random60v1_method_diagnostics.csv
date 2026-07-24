@@ -1,0 +1,6 @@
+method,records,successful_nodes,mean_valid_candidates,zero_valid_records,mean_victim_queries_recomputed,no_valid_candidate_rate,generation_minutes
+random_edit,60,0,5.73,0,5.73,0.0000,0.00
+non_graph_attack,60,1,2.02,9,2.02,0.1500,22.38
+graph_prompt_attack,60,0,1.53,17,1.53,0.2833,20.96
+feedback_non_graph,60,2,2.87,2,2.87,0.0333,32.45
+graph_feedback,60,0,2.27,9,2.27,0.1500,31.91

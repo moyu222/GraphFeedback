@@ -1,0 +1,63 @@
+seed: 240726
+dataset: citeseer
+sample_size: 60
+smoke_size: 6
+selection_strategy: stratified_random
+required_per_class: 10
+exclude_node_ids:
+  - 33
+  - 207
+  - 354
+  - 736
+  - 988
+  - 1190
+  - 1236
+  - 1263
+  - 1281
+  - 1462
+  - 1544
+  - 1896
+  - 1965
+  - 1971
+  - 1978
+  - 2093
+  - 2195
+  - 2286
+  - 2336
+  - 2339
+  - 2379
+  - 2517
+  - 2587
+  - 2694
+  - 2783
+  - 2800
+  - 2964
+  - 2976
+  - 3074
+  - 3136
+victim_batch_size: 8
+embedding_batch_size: 32
+candidate_count: 6
+generation_attempts: 6
+query_budget: 6
+feedback_initial_queries: 3
+feedback_refinement_queries: 3
+max_new_tokens: 256
+node_max_length: 256
+min_parsing_rate: 0.50
+min_valid_record_rate: 0.50
+temperature: 0.70
+max_length_ratio: 1.20
+min_length_ratio: 0.80
+max_changed_token_ratio: 0.20
+min_semantic_similarity: 0.85
+generator_model: Qwen/Qwen2.5-0.5B-Instruct
+node_encoder_model: sentence-transformers/all-MiniLM-L6-v2
+semantic_model: sentence-transformers/all-mpnet-base-v2
+methods:
+  - random_edit
+  - non_graph_attack
+  - graph_prompt_attack
+feedback_methods:
+  - feedback_non_graph
+  - graph_feedback

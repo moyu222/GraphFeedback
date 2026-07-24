@@ -4,7 +4,7 @@
 .SYNOPSIS
     Runs the resumable local GraphFeedback experiment.
 .PARAMETER Mode
-    Check, Validate, Smoke, Demo, FinalSmoke, Final, or Aggregate.
+    Check, Validate, Smoke, Demo, FinalSmoke, Final, Confirmatory, or Aggregate.
 .PARAMETER RunId
     Output run identifier. Reusing it resumes completed JSONL records.
 .EXAMPLE
@@ -17,33 +17,43 @@
 
 [CmdletBinding()]
 param(
-    [ValidateSet('Check', 'Download', 'Validate', 'Smoke', 'Demo', 'FinalSmoke', 'Final', 'Aggregate')]
+    [ValidateSet('Check', 'Download', 'Validate', 'Smoke', 'Demo', 'FinalSmoke', 'Final', 'Confirmatory', 'Aggregate')]
     [string]$Mode = 'Check',
 
     [ValidatePattern('^[A-Za-z0-9._-]+$')]
     [string]$RunId = 'demo30',
 
     [ValidateRange(0, 10000)]
-    [int]$SampleSize = 0
+    [int]$SampleSize = 0,
+
+    [string]$ConfigPath = ''
 )
 
 $ErrorActionPreference = 'Stop'
 $ProjectRoot = Split-Path -Parent $PSScriptRoot
 $Python = if ($env:GRAPHFEEDBACK_PYTHON) {
-    $env:GRAPHFEEDBACK_PYTHON
+    $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($env:GRAPHFEEDBACK_PYTHON)
 }
 else {
-    $PythonCommand = Get-Command python -ErrorAction SilentlyContinue
-    if (-not $PythonCommand) {
-        throw 'Python was not found. Activate the graphfeedback environment or set GRAPHFEEDBACK_PYTHON.'
+    $pythonCommand = Get-Command python -ErrorAction SilentlyContinue
+    if (-not $pythonCommand) {
+        throw 'Python was not found on PATH. Activate the experiment environment or set GRAPHFEEDBACK_PYTHON.'
     }
-    $PythonCommand.Source
+    $pythonCommand.Source
 }
 $Pipeline = Join-Path $PSScriptRoot 'scripts\pipeline.py'
-$Config = Join-Path $PSScriptRoot 'config.local.yaml'
+$Config = if ($ConfigPath) {
+    $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($ConfigPath)
+}
+else {
+    Join-Path $PSScriptRoot 'config.local.yaml'
+}
 
 if (-not (Test-Path -LiteralPath $Python -PathType Leaf)) {
     throw "Python environment not found: $Python"
+}
+if (-not (Test-Path -LiteralPath $Config -PathType Leaf)) {
+    throw "Experiment config not found: $Config"
 }
 
 function Invoke-PipelineStep {
@@ -117,6 +127,18 @@ try {
         'Final' {
             Invoke-PipelineStep -Command 'validate'
             Invoke-PipelineStep -Command 'select' -SampleSize $(if ($SampleSize -gt 0) { $SampleSize } else { 30 })
+            Invoke-PipelineStep -Command 'generate'
+            Invoke-PipelineStep -Command 'filter'
+            Invoke-PipelineStep -Command 'evaluate'
+            Invoke-PipelineStep -Command 'feedback-generate'
+            Invoke-PipelineStep -Command 'feedback-filter'
+            Invoke-PipelineStep -Command 'feedback-evaluate'
+            Invoke-PipelineStep -Command 'feedback-finalize'
+            Invoke-PipelineStep -Command 'aggregate'
+        }
+        'Confirmatory' {
+            Invoke-PipelineStep -Command 'validate'
+            Invoke-PipelineStep -Command 'select' -SampleSize $(if ($SampleSize -gt 0) { $SampleSize } else { 60 })
             Invoke-PipelineStep -Command 'generate'
             Invoke-PipelineStep -Command 'filter'
             Invoke-PipelineStep -Command 'evaluate'

@@ -350,7 +350,9 @@ def select_nodes(config: dict[str, Any], config_path: Path, run_id: str, sample_
     predictions = scores.argmax(dim=1).tolist()
     labels = [int(data.y[node_id]) for node_id in test_ids]
     score_by_node = {int(node): scores[index].tolist() for index, node in enumerate(test_ids)}
-    correct_ids = [node for node, prediction, label in zip(test_ids, predictions, labels) if prediction == label]
+    all_correct_ids = [node for node, prediction, label in zip(test_ids, predictions, labels) if prediction == label]
+    excluded_node_ids = {int(node_id) for node_id in config.get("exclude_node_ids", [])}
+    correct_ids = [node for node in all_correct_ids if int(node) not in excluded_node_ids]
     correct_labels = [int(data.y[node]) for node in correct_ids]
     selection_strategy = str(config.get("selection_strategy", "stratified_random"))
     if selection_strategy == "stratified_low_margin":
@@ -359,6 +361,24 @@ def select_nodes(config: dict[str, Any], config_path: Path, run_id: str, sample_
         selected_ids = stratified_sample(correct_ids, correct_labels, sample_size, int(config["seed"]))
     else:
         raise ValueError(f"Unknown selection strategy: {selection_strategy}")
+    if len(selected_ids) != sample_size:
+        raise RuntimeError(
+            f"Selection returned {len(selected_ids)} nodes, but the frozen protocol requires {sample_size}"
+        )
+    selected_label_counts: dict[int, int] = defaultdict(int)
+    for node_id in selected_ids:
+        selected_label_counts[int(data.y[node_id])] += 1
+    required_per_class = config.get("required_per_class")
+    if required_per_class is not None:
+        expected = int(required_per_class)
+        observed = {label: selected_label_counts.get(label, 0) for label in range(len(classes))}
+        if any(count != expected for count in observed.values()):
+            raise RuntimeError(
+                f"Class-balance gate failed: expected {expected} nodes per class, observed {observed}"
+            )
+    overlap = sorted(set(selected_ids) & excluded_node_ids)
+    if overlap:
+        raise RuntimeError(f"Selection exclusion gate failed; overlapping node IDs: {overlap}")
     prediction_by_node = {int(node): int(predictions[index]) for index, node in enumerate(test_ids)}
     graph_neighbors = adjacency(data)
     for node_id in selected_ids:
@@ -386,11 +406,14 @@ def select_nodes(config: dict[str, Any], config_path: Path, run_id: str, sample_
     manifest.update(
         {
             "test_nodes": len(test_ids),
-            "clean_correct": len(correct_ids),
-            "clean_accuracy": len(correct_ids) / len(test_ids),
+            "clean_correct": len(all_correct_ids),
+            "clean_accuracy": len(all_correct_ids) / len(test_ids),
             "selected_nodes": len(selected_ids),
             "selected_node_ids": selected_ids,
+            "selected_label_counts": {str(label): count for label, count in sorted(selected_label_counts.items())},
             "selection_strategy": selection_strategy,
+            "excluded_node_ids": sorted(excluded_node_ids),
+            "excluded_correct_nodes": len(all_correct_ids) - len(correct_ids),
         }
     )
     atomic_json(directory / "run_manifest.json", manifest)

@@ -1,0 +1,3 @@
+feedback_method,matched_one_round_method,first_round_successes,refinement_only_successes,total_successes,attempted_nodes
+feedback_non_graph,non_graph_attack,4,3,7,30
+graph_feedback,graph_prompt_attack,5,2,7,30

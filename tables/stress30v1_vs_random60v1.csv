@@ -1,0 +1,6 @@
+method,stress_successes,stress_attempted,stress_asr,random_successes,random_attempted,random_asr,random_minus_stress_asr
+random_edit,5,30,0.1667,0,60,0.0000,-0.1667
+non_graph_attack,4,30,0.1333,1,60,0.0167,-0.1167
+graph_prompt_attack,5,30,0.1667,0,60,0.0000,-0.1667
+feedback_non_graph,7,30,0.2333,2,60,0.0333,-0.2000
+graph_feedback,7,30,0.2333,0,60,0.0000,-0.2333

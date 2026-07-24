@@ -1,0 +1,7 @@
+label,class_name,nodes,random_edit_successes,non_graph_attack_successes,graph_prompt_attack_successes,feedback_non_graph_successes,graph_feedback_successes
+0,Agents,10,0,0,0,0,0
+1,Machine Learning,10,0,1,0,1,0
+2,Information Retrieval,10,0,0,0,0,0
+3,Database,10,0,0,0,0,0
+4,Human Computer Interaction,10,0,0,0,0,0
+5,Artificial Intelligence,10,0,0,0,1,0
