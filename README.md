@@ -43,6 +43,8 @@ GraphFeedback/
 │   └── output/
 ├── reports/
 │   └── GraphFeedback_Experimental_Report_Academic.docx
+├── paper/
+│   └── GraphFeedback.pdf
 ├── REPORT.md
 └── CITATION.cff
 ```
@@ -101,6 +103,6 @@ Outputs are written below `experiments/outputs/<run-id>/citeseer/`. Raw JSONL fi
 
 Exact settings are stored in the two configuration files and the reviewed experiment protocol. Aggregate results appear under `results/`; all secondary tables and figures are derived deterministically from saved formal records.
 
-## Report and citation
+## Paper, report, and citation
 
-The complete interpretation, equations, figures, limitations, and references are provided in [REPORT.md](REPORT.md) and the formatted [academic Word report](reports/GraphFeedback_Experimental_Report_Academic.docx). The study has not been submitted or published. If this artifact is used, cite the repository metadata in `CITATION.cff` together with the original GraphCLIP paper and implementation.
+The submission-style IEEE conference manuscript is available as [GraphFeedback.pdf](paper/GraphFeedback.pdf). The complete extended interpretation, equations, figures, limitations, and references are also provided in [REPORT.md](REPORT.md) and the formatted [academic Word report](reports/GraphFeedback_Experimental_Report_Academic.docx). The study has not been submitted or published. If this artifact is used, cite the repository metadata in `CITATION.cff` together with the original GraphCLIP paper and implementation.
